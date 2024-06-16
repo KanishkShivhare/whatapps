@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <style>
+        *{
+            margin: 0%;
+            padding: 0%;
+            box-sizing: border-box;
+        }html,body{
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+</head> 
+
+<body>
+    <div id="main" class="h-100 w-100" style="display: flex; justify-content: center; align-items: center;" >    
+        <form class="col-3" action="/register" method="post" >
+            <div class="form-group mb-3">
+            <label for="username">Username</label>
+            <input type="text" name="username" class="form-control" id="username"  placeholder="Enter username">
+            <small id="username" class="form-text text-muted">Username should be unique.</small> 
+            </div>
+            <div class="form-group mb-3">
+            <label for="contact">contact</label>
+            <input type="text" name="contact" class="form-control" id="contact"  placeholder="Enter contact">
+            </div>
+            <div class="form-group mb-3">
+            <label for="Password">Password</label>
+            <input type="password" name="password" class="form-control" id="Password" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Create user</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
+

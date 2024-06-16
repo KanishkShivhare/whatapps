@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div id="main">
+        <form class="bg-white p-8 rounded shadow-md max-w-md" action="/login" method="post">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                <input style="padding: 5px; border: 1px solid rgb(126, 126, 126); border-radius: 5px;"  type="text" name="username" id="username" class="form-input" placeholder="Enter username">
+                <small style="cursor: default;" class="text-xs text-gray-500">Username should be unique.</small> 
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                <input style="padding: 5px; border: 1px solid rgb(126, 126, 126); border-radius: 5px;" type="password" name="password" id="password" class="form-input" placeholder="Password">
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Login</button>
+            <h2 style="margin-top: 10px;">Need an account? <a href="/register" style="color: blue;"> sign up</a></h2>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
+

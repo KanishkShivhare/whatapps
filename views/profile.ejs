@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            text-transform: capitalize;
+        }
+
+        .left {
+            width: 25rem;
+            background-color: #ccccccb8;
+        }
+
+        .top {
+            align-items: center;
+            padding: 10px;
+            justify-content: space-between;
+            background-color: #198754;
+        }
+
+        .user {
+            padding: 0px 10px;
+            gap: 10px;
+        }
+
+        .userImg {
+            height: 3rem;
+            width: 3rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logout button {
+
+            outline: none;
+            height: 2rem;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: darkgreen;
+        }
+
+        .frd {
+            margin: 10px 5px 10px 5px;
+            border-radius: 20px;
+            padding: 20px 20px 20px 20px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .frdimg {
+            height: 3rem;
+            width: 3rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .right {
+            width: calc(100vw - 25rem);
+        }
+
+        .right .top {
+            /* position: sticky;
+            top: 0; */
+            height: 4.25rem;
+            width: 100%;
+            background: #43b57c;
+
+        }
+
+        .right .top .user {
+            display: flex;
+            align-items: center;
+        }
+
+        .chattingarea {
+            height: calc(100vh - 7rem);
+        }
+
+        .chattingarea .incomingmsg .msg {
+            margin-top: 10px;
+            background-color: #9edf95;
+            width: fit-content;
+            padding: 5px;
+            border-radius: 5px;
+            border-bottom-left-radius: 0px;
+        }
+
+        .chattingarea .outgoingmsg .msg {
+            margin-top: 5px;
+            background-color: #9edf95;
+            width: fit-content;
+            padding: 5px;
+            border-radius: 5px;
+            border-bottom-right-radius: 0%;
+            margin-left: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main" class="w-100 h-100 d-flex">
+        <div class="left
+         h-100 ">
+            <div class="top
+             d-flex">
+                <div class="user
+                 d-flex align-items text-light">
+                    <img class="userImg" src="<%= loggedInUser.Image%>" alt="">
+                    <h2>
+                        <%= loggedInUser.username%>
+                    </h2>
+                </div>
+                <button id="joinGroupButton" onclick="joinGroup()"><i class="ri-user-add-line"></i></button>
+                <button onclick="createNewGroup()"
+                    style="border: none; background-color: transparent; display: flex; align-items: center;">
+                    <h5 style="font-size: 15px;">group</h5>
+                    <i class="ri-add-line" style="font-size: 23px;"></i>
+                </button>
+                <a href="/logout" style="text-decoration: none;">
+                    <div class="logout
+                                 d-flex align-items-center justify-content-center" style="">
+                        <button class="content d-flex align-items-center justify-content-center text-light">Log
+                            Out</button>
+                    </div>
+                </a>
+            </div>
+            <div class="mid">
+            </div>
+        </div>
+        <div class="right" style="display: none;">
+            <div class="top">
+                <div id="currentchatuser" class="user
+                 text-light">
+                    <img class="userImg"
+                        src="https://images.unsplash.com/photo-1705368416404-034e37f939c2?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        alt="">
+                    <h2>username</h2>
+                </div>
+            </div>
+            <div class="chattingarea
+             w-100  p-3">
+            </div>
+            <div class="botton d-flex">
+                <input type="text" class="form-control" placeholder="Enter message">
+                <button onclick="sendMsg()" class=" btn btn-success">Send</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.emit('join-server', {
+            userName: `<%= loggedInUser.username%>`,
+            profileImg: `<%= loggedInUser.Image%>`
+        })
+        socket.on('new-user-join', userDetails => {
+            appendChat(userDetails.profileImg, userDetails.userName)
+        })
+    </script>
+    <script>
+
+        let currentchatuser = null;
+        const sender = `<%= loggedInUser.username%>`;
+        function putincomingmsg(msg) {
+            const template = `
+                 <div class="incomingmsg">
+                    <div class="msg">
+                        ${msg}
+                    </div>
+                </div>`;
+            document.querySelector(".chattingarea").innerHTML += template
+        }
+        function outgoingmsg(msg) {
+            const template = `
+                    <div class="outgoingmsg">
+                        <div class="msg">
+                            ${msg}
+                        </div>
+                    </div>
+                `
+            document.querySelector('.chattingarea').innerHTML += template
+        }
+        function sendMsg() {
+            const msgInput = document.querySelector('.right .botton input');
+            const msg = msgInput.value.trim(); // Trim to remove leading/trailing whitespace
+
+            if (msg) { // Check if msg is not empty
+                outgoingmsg(msg);
+                msgInput.value = "";
+            } else {
+                console.log("Message is empty.");
+            }
+            socket.emit('private-msg', {
+                msg,
+                receiver: currentchatuser,
+                sender: `<%= loggedInUser.username%>`
+            })
+
+        }
+
+        socket.on('receive-private-msg', msgObj => {
+            putincomingmsg(msgObj.msg)
+        })
+
+        function appendChat(profileImg, userName) {
+            if (document.querySelector(`#${userName}`)) {
+                return
+            }
+            const template = `
+                <div onClick="appendChatarea('${profileImg}','${userName}')" class="frd
+                    d-flex align-items-center gap-2 p-2" id="${userName}">
+                        <img class="frdimg"
+                        src="${profileImg}" 
+                        alt="">
+                        <h3>${userName}</h3>
+                    </div>
+                `
+            document.querySelector(".mid").innerHTML += template
+        }
+        function appendChatarea(profileImg, userName) {
+            currentchatuser = userName
+            document.querySelector('#main .right').style.display = 'initial'
+            // document.querySelector('#main .left .mid .frd').style.margin = '10px 0px 10px 5px'
+            // document.querySelector('#main .left .mid .frd').style.padding = '20px 0px 20px 20px'
+            // document.querySelector('#main .left .mid .frd').style.borderRadius = '20px 0px 0px 20px'
+            document.querySelector("#currentchatuser img").setAttribute('src', profileImg)
+            document.querySelector("#currentchatuser h2").textContent = userName
+            document.querySelector(".chattingarea").innerHTML = ""
+
+            // console.log({receiver: userName,
+            //     sender: `<%= loggedInUser.username%>`});
+            socket.emit('fetch-conversation', {
+                receiver: userName,
+                sender: `<%= loggedInUser.username%>`
+            })
+
+        }
+        socket.on("send-conversation-chat", allmsg => {
+            allmsg.forEach(msg => {
+                if (msg.sender == sender) {
+                    outgoingmsg(msg.msg)
+                } else {
+                    putincomingmsg(msg.msg)
+
+                }
+            });
+        })
+
+        function createNewGroup() {
+            const groupName = prompt("Enter group name");
+            if (!groupName) {
+                return;
+            }
+            // console.log(groupName);     
+            socket.emit('create-new-group', {
+                sender,
+                groupName
+            })
+        }
+
+        socket.on('group-created', newGroup => {
+            appendChat(newGroup.Image, newGroup.name)
+        })
+
+        socket.on('group-joined', groupDetails => {
+            appendChat(groupDetails.Image, groupDetails.name)
+        })
+
+        function joinGroup() {
+            const groupName = prompt("Enter group name to join")
+            socket.emit('join-group', {
+                groupName,
+                sender
+            })
+        }
+    </script>
+</body>
+
+</html>
